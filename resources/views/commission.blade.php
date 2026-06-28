@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Commissions | Yan</title>
         <meta name="description" content="Yan digital illustration commissions sheet and calculator.">
+        <link rel="icon" href="{{ asset('icons/ico.png') }}?v={{ time() }}">
         
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">

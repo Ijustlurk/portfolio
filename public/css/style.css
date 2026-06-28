@@ -3387,3 +3387,136 @@ a, img, [draggable] {
 .social-pill-btn.calculator-btn:hover {
     box-shadow: 0 8px 25px rgba(255, 118, 117, 0.35);
 }
+
+/* Floating Feedback Button */
+.feedback-floating-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    height: 60px;
+    border-radius: 30px;
+    background: var(--gradient);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 9999;
+    padding: 0 18px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+}
+
+.feedback-floating-btn svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.feedback-floating-btn-text {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.95rem;
+    font-weight: 700;
+    white-space: nowrap;
+    max-width: 0;
+    opacity: 0;
+    margin-left: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.feedback-floating-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.feedback-floating-btn:hover .feedback-floating-btn-text {
+    max-width: 200px;
+    opacity: 1;
+    margin-left: 12px;
+}
+
+/* Feedback Modal */
+.feedback-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.feedback-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+.feedback-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+.feedback-modal-content {
+    position: relative;
+    background: var(--card-bg);
+    width: 90%;
+    max-width: 400px;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 1;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.feedback-modal.active .feedback-modal-content {
+    transform: scale(1);
+}
+.feedback-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+.feedback-modal-close:hover {
+    color: var(--accent-1);
+}
+.feedback-modal-title {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--text-main);
+}
+
+/* Feedback Form Inputs */
+.feedback-input {
+    width: 100%;
+    padding: 0.85rem;
+    border-radius: 8px;
+    border: 2px solid rgba(150, 150, 150, 0.3);
+    background: rgba(150, 150, 150, 0.05);
+    color: var(--text-main);
+    font-family: var(--font-sans, sans-serif);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+.feedback-input:focus {
+    border-color: var(--accent-1);
+    background: rgba(150, 150, 150, 0.1);
+}

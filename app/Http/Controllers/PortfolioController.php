@@ -7,6 +7,8 @@ use App\Models\AboutContent;
 use App\Models\Setting;
 use App\Models\CommissionTier;
 use App\Models\SocialLink;
+use App\Models\Feedback;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class PortfolioController extends Controller
@@ -106,5 +108,20 @@ class PortfolioController extends Controller
             'nsfw' => (int) \App\Models\Setting::get('commission_price_nsfw', '50'),
         ];
         return view('commission', compact('tiers', 'multipliers'));
+    }
+
+    /**
+     * Store submitted feedback.
+     */
+    public function storeFeedback(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'nullable|string|max:255',
+            'message' => 'required|string|max:100',
+        ]);
+
+        Feedback::create($validated);
+
+        return response()->json(['success' => true, 'message' => 'Feedback submitted successfully.']);
     }
 }

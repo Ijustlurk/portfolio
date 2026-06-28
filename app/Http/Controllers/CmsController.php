@@ -165,8 +165,9 @@ class CmsController extends Controller
         ];
 
         $socialLinks = SocialLink::orderBy('sort_order', 'asc')->get();
+        $feedbacks = \App\Models\Feedback::orderBy('created_at', 'desc')->get();
 
-        return view('cms.dashboard', compact('illustrations', 'comics', 'concepts', 'about', 'analytics', 'settings', 'commissions', 'commissionSettings', 'socialLinks'));
+        return view('cms.dashboard', compact('illustrations', 'comics', 'concepts', 'about', 'analytics', 'settings', 'commissions', 'commissionSettings', 'socialLinks', 'feedbacks'));
     }
 
     /**
@@ -693,5 +694,16 @@ class CmsController extends Controller
             'success' => true,
             'message' => 'Social links reordered successfully.'
         ]);
+    }
+
+    /**
+     * Delete a feedback.
+     */
+    public function destroyFeedback($id)
+    {
+        $feedback = \App\Models\Feedback::findOrFail($id);
+        $feedback->delete();
+
+        return redirect()->route('cms.dashboard')->with('success', 'Feedback deleted successfully!');
     }
 }

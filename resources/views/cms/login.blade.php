@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CMS Admin Sign-in | Yan</title>
+    <link rel="icon" href="{{ asset('icons/ico.png') }}?v={{ time() }}">
     
     <!-- Fonts -->
     <link href="https://fonts.cdnfonts.com/css/ibm-plex-mono-3" rel="stylesheet">

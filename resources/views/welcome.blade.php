@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Portfolio | Yan - 2D Anime Style Illustrator & Comic Artist</title>
         <meta name="description" content="Portfolio of a 2D Anime Illustrator and Comic Artist.">
+        <link rel="icon" href="{{ asset('icons/ico.png') }}?v={{ time() }}">
         
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2181,6 +2182,105 @@
                     });
                 });
             });
+        </script>
+        <!-- Floating Feedback Button -->
+        <button class="feedback-floating-btn" id="feedback-floating-btn" onclick="openFeedbackModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+            <span class="feedback-floating-btn-text">Leave a Feedback</span>
+        </button>
+
+        <!-- Feedback Modal -->
+        <div id="feedback-modal" class="feedback-modal">
+            <div class="feedback-modal-backdrop" onclick="closeFeedbackModal()"></div>
+            <div class="feedback-modal-content">
+                <button class="feedback-modal-close" onclick="closeFeedbackModal()" aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                <h3 class="feedback-modal-title">Leave a Feedback</h3>
+                <form id="feedback-form" onsubmit="submitFeedback(event)">
+                    @csrf
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="feedback-name" style="display: block; margin-bottom: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-main);">Name (Optional)</label>
+                        <input type="text" id="feedback-name" name="name" maxlength="255" class="feedback-input" placeholder="Anonymous">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label for="feedback-message" style="display: block; margin-bottom: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-main);">Feedback (Max 100 chars)</label>
+                        <textarea id="feedback-message" name="message" maxlength="100" required class="feedback-input" style="resize: none; height: 100px;" placeholder="What do you think?"></textarea>
+                        <div style="text-align: right; font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); margin-top: 0.5rem;"><span id="feedback-char-count">0</span> / 100</div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button type="button" class="btn btn-secondary" onclick="closeFeedbackModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="feedback-submit-btn">Send</button>
+                    </div>
+                    <div id="feedback-status" style="margin-top: 1rem; font-size: 0.85rem; text-align: center; display: none;"></div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function openFeedbackModal() {
+                const modal = document.getElementById('feedback-modal');
+                modal.classList.add('active');
+            }
+
+            function closeFeedbackModal() {
+                const modal = document.getElementById('feedback-modal');
+                modal.classList.remove('active');
+                document.getElementById('feedback-form').reset();
+                document.getElementById('feedback-char-count').textContent = '0';
+                document.getElementById('feedback-status').style.display = 'none';
+            }
+
+            document.getElementById('feedback-message').addEventListener('input', function() {
+                document.getElementById('feedback-char-count').textContent = this.value.length;
+            });
+
+            async function submitFeedback(event) {
+                event.preventDefault();
+                const form = event.target;
+                const submitBtn = document.getElementById('feedback-submit-btn');
+                const statusEl = document.getElementById('feedback-status');
+                
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending...';
+                
+                try {
+                    const formData = new FormData(form);
+                    const response = await fetch('{{ route('feedback.store') }}', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    statusEl.style.display = 'block';
+                    if (data.success) {
+                        statusEl.style.color = '#10b981';
+                        statusEl.textContent = 'Thank you for your feedback!';
+                        form.reset();
+                        document.getElementById('feedback-char-count').textContent = '0';
+                        setTimeout(closeFeedbackModal, 2000);
+                    } else {
+                        statusEl.style.color = '#ef4444';
+                        statusEl.textContent = data.message || 'Error submitting feedback.';
+                    }
+                } catch (error) {
+                    statusEl.style.display = 'block';
+                    statusEl.style.color = '#ef4444';
+                    statusEl.textContent = 'An unexpected error occurred.';
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send';
+                }
+            }
         </script>
     </body>
 </html>

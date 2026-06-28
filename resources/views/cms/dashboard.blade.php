@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CMS Dashboard | Yan</title>
+    <link rel="icon" type="image/png" href="{{ asset('icons/ico.png') }}?v={{ time() }}">
     
     <!-- Fonts -->
     <link href="https://fonts.cdnfonts.com/css/ibm-plex-mono-3" rel="stylesheet">
@@ -1159,6 +1160,7 @@
             <button class="tab-btn" id="tab-btn-analytics" onclick="switchTab('analytics')">ANALYTICS</button>
             <button class="tab-btn" id="tab-btn-socials" onclick="switchTab('socials')">SOCIALS</button>
             <button class="tab-btn" id="tab-btn-settings" onclick="switchTab('settings')">SETTINGS</button>
+            <button class="tab-btn" id="tab-btn-feedback" onclick="switchTab('feedback')">FEEDBACK</button>
         </div>
 
         <!-- Items Table Section -->
@@ -1967,6 +1969,56 @@
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+            <!-- FEEDBACK TAB CONTENT -->
+            <div class="tab-content" id="content-feedback" style="display: none;">
+                <div style="padding: 1rem 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="font-family: var(--font-mono); font-size: 1.25rem; font-weight: 800; text-transform: uppercase; margin: 0;">
+                            User Feedback
+                        </h3>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden;">
+                        <table class="items-table" id="table-feedback">
+                            <thead>
+                                <tr>
+                                    <th style="width: 150px;">Name</th>
+                                    <th>Feedback Message</th>
+                                    <th style="width: 160px;">Submitted At</th>
+                                    <th style="width: 120px; text-align: center;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($feedbacks as $feedback)
+                                    <tr class="portfolio-item-row" data-id="{{ $feedback->id }}">
+                                        <td style="font-weight: 600; color: var(--text-main);">
+                                            {{ $feedback->name ?? 'Anonymous' }}
+                                        </td>
+                                        <td style="font-size: 0.9rem; line-height: 1.4; word-break: break-word;">
+                                            {{ $feedback->message }}
+                                        </td>
+                                        <td style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">
+                                            {{ $feedback->created_at->format('Y-m-d H:i') }}
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <form action="{{ route('cms.feedback.destroy', $feedback->id) }}" method="POST" onsubmit="return confirm('Delete this feedback?');" style="margin: 0;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; color: var(--text-muted); font-family: var(--font-mono); padding: 3rem;">No feedback submitted yet.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

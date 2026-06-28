@@ -5,6 +5,7 @@ use App\Http\Controllers\CmsController;
 
 Route::get('/', [PortfolioController::class, 'index'])->name('home');
 Route::get('/commission', [PortfolioController::class, 'commission'])->name('commission');
+Route::post('/feedback', [PortfolioController::class, 'storeFeedback'])->name('feedback.store');
 
 Route::prefix('cms')->group(function () {
     Route::get('/login', [CmsController::class, 'showLogin'])->name('login');
@@ -28,5 +29,6 @@ Route::prefix('cms')->group(function () {
         Route::post('/socials/reorder', [CmsController::class, 'reorderSocialLinks'])->name('cms.socials.reorder');
         Route::post('/socials/{id}', [CmsController::class, 'updateSocialLink'])->name('cms.socials.update');
         Route::delete('/socials/{id}', [CmsController::class, 'destroySocialLink'])->name('cms.socials.destroy');
+        Route::delete('/feedback/{id}', [CmsController::class, 'destroyFeedback'])->name('cms.feedback.destroy');
     });
 });
