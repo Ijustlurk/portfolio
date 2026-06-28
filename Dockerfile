@@ -43,7 +43,9 @@ COPY . .
 COPY --from=vendor /app/vendor/ ./vendor/
 COPY --from=frontend /app/public/build/ ./public/build/
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /var/www/html \
+    && chown -R www-data:www-data /var/lib/nginx \
+    && chown -R www-data:www-data /var/log/nginx
 EXPOSE 80
 # Run supervisor
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
