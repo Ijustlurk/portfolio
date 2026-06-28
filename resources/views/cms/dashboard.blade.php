@@ -1643,7 +1643,10 @@
 
                     <!-- Recent Visited Logs Table -->
                     <div class="table-card">
-                        <h3 class="chart-card-title">Recent Page Visits</h3>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 class="chart-card-title" style="margin-bottom: 0;">Recent Page Visits</h3>
+                            <a href="{{ route('cms.analytics.download') }}" style="padding: 0.4rem 0.8rem; background: var(--accent-color); color: white; border-radius: 4px; text-decoration: none; font-size: 0.85rem; font-family: var(--font-mono); transition: background 0.2s;">Download CSV</a>
+                        </div>
                         <div class="items-table-wrapper" style="margin-top: 0.5rem;">
                             <table class="items-table">
                                 <thead>

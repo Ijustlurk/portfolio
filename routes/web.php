@@ -13,6 +13,7 @@ Route::prefix('cms')->group(function () {
     
     Route::middleware('auth')->group(function () {
         Route::get('/', [CmsController::class, 'index'])->name('cms.dashboard');
+        Route::get('/analytics/download', [CmsController::class, 'downloadVisitsLog'])->name('cms.analytics.download');
         Route::post('/logout', [CmsController::class, 'logout'])->name('logout');
         Route::post('/items', [CmsController::class, 'store'])->name('cms.items.store');
         Route::post('/items/{id}', [CmsController::class, 'update'])->name('cms.items.update');

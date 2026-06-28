@@ -706,4 +706,41 @@ class CmsController extends Controller
 
         return redirect()->route('cms.dashboard')->with('success', 'Feedback deleted successfully!');
     }
+
+    /**
+     * Download the page views log as CSV.
+     */
+    public function downloadVisitsLog()
+    {
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=page_views_' . date('Y-m-d_H-i-s') . '.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['ID', 'IP Address (Hashed)', 'Path', 'URL', 'Referer', 'User Agent', 'Date']);
+
+            PageView::orderBy('created_at', 'desc')->chunk(1000, function ($views) use ($file) {
+                foreach ($views as $view) {
+                    fputcsv($file, [
+                        $view->id,
+                        $view->ip_address,
+                        $view->path,
+                        $view->url,
+                        $view->referer,
+                        $view->user_agent,
+                        $view->created_at,
+                    ]);
+                }
+            });
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 }

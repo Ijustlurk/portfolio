@@ -22,7 +22,7 @@ class TrackPageViews
         if (!str_starts_with($path, 'cms') && $path !== 'up' && !$request->ajax() && !$request->wantsJson()) {
             try {
                 PageView::create([
-                    'ip_address' => hash('sha256', $request->ip() . config('app.key')),
+                    'ip_address' => md5($request->ip() . config('app.key')),
                     'user_agent' => $request->userAgent(),
                     'url' => $request->fullUrl(),
                     'path' => $path === '/' ? 'Home' : $path,
