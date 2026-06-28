@@ -665,9 +665,9 @@
         <div class="commission-wrapper">
             <!-- Left Column: Image Artwork Previews -->
             <div class="preview-container-col">
-                <div class="preview-static-wrap">
+                <div class="preview-static-wrap" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
                     <div class="calc-section-title" style="margin-bottom: 10px; width: 100%; max-width: 520px; text-align: left; font-weight: 800; letter-spacing: 0.15em;">Sample</div>
-                    <div class="preview-frame">
+                    <div class="preview-frame" style="width: 100%;">
                         <div class="preview-image-wrapper">
                             <div class="preview-sample-badge">Sample</div>
                             <img id="tier-preview-image" src="" alt="Commission Preview">
