@@ -162,14 +162,16 @@
         <section id="about">
             <div class="about-container">
                 <!-- Interactive 3D Profile Card -->
-                <div class="about-card" data-tilt data-tilt-max="15" data-tilt-speed="1000" data-tilt-glare="true" data-tilt-max-glare="0.6">
-                    <div class="about-card-image">
-                        @php
-                            $isDefaultImage = $about->image_path === 'images/IMG_4171 2.png';
-                            $imgUrl = str_starts_with($about->image_path, 'http') ? $about->image_path : ($isDefaultImage ? asset($about->image_path) : asset('storage/' . $about->image_path));
-                        @endphp
-                        <img src="{{ $imgUrl }}" alt="Artist Profile" style="transform: scale({{ $about->image_scale }}); object-position: calc(50% + {{ $about->image_offset_x }}px) calc(50% + {{ $about->image_offset_y }}px);">
-                        <div class="about-card-image-overlay"></div>
+                <div class="about-card-wrapper">
+                    <div class="about-card">
+                        <div class="about-card-image">
+                            @php
+                                $isDefaultImage = $about->image_path === 'images/IMG_4171 2.png';
+                                $imgUrl = str_starts_with($about->image_path, 'http') ? $about->image_path : ($isDefaultImage ? asset($about->image_path) : asset('storage/' . $about->image_path));
+                            @endphp
+                            <img src="{{ $imgUrl }}" alt="Artist Profile" style="transform: scale({{ $about->image_scale }}); object-position: calc(50% + {{ $about->image_offset_x }}px) calc(50% + {{ $about->image_offset_y }}px);">
+                            <div class="about-card-image-overlay"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -229,7 +231,7 @@
         <section id="illustrations">
             @if($settings['maintenance_illustration'])
                 <div class="coming-soon-container">
-                    <div class="coming-soon-card" data-tilt data-tilt-max="10" data-tilt-speed="1000" data-tilt-glare="true" data-tilt-max-glare="0.3">
+                    <div class="coming-soon-card">
                         <span class="coming-soon-subtitle">Illustrations Section</span>
                         <h2 class="coming-soon-title">Coming Soon</h2>
                         <p class="coming-soon-desc">This section is currently under maintenance. We're cataloging new illustration works and will be back shortly!</p>
@@ -269,7 +271,7 @@
         <section id="comics">
             @if($settings['maintenance_comic'])
                 <div class="coming-soon-container">
-                    <div class="coming-soon-card" data-tilt data-tilt-max="10" data-tilt-speed="1000" data-tilt-glare="true" data-tilt-max-glare="0.3">
+                    <div class="coming-soon-card">
                         <span class="coming-soon-subtitle">Comics & Manga</span>
                         <h2 class="coming-soon-title">Coming Soon</h2>
                         <p class="coming-soon-desc">Our comics catalog is currently offline for layout updates. Stay tuned for new chapters and pages!</p>
@@ -312,7 +314,7 @@
         <section id="concepts">
             @if($settings['maintenance_concept'])
                 <div class="coming-soon-container">
-                    <div class="coming-soon-card" data-tilt data-tilt-max="10" data-tilt-speed="1000" data-tilt-glare="true" data-tilt-max-glare="0.3">
+                    <div class="coming-soon-card">
                         <span class="coming-soon-subtitle">Works Gallery</span>
                         <h2 class="coming-soon-title">Coming Soon</h2>
                         <p class="coming-soon-desc">We are curating high-quality character designs, keyframes, and environmental layouts. Coming soon!</p>
@@ -357,18 +359,29 @@
                 
                 <div class="socials-container">
                     @foreach($socialLinks as $link)
+                        @if(!$link->is_visible) @continue @endif
                         @php
                             $slug = strtolower($link->name);
                             $target = ($slug === 'commission calculator') ? '' : '_blank';
-                            $class = 'vgen-btn'; // default
+                            $class = 'vgen-btn'; // default generic class
+                            $style = "";
+                            
                             if ($slug === 'instagram') $class = 'instagram-btn';
                             elseif ($slug === 'twitter') $class = 'twitter-btn';
                             elseif ($slug === 'tiktok') $class = 'tiktok-btn';
                             elseif ($slug === 'facebook') $class = 'facebook-btn';
+                            elseif ($slug === 'pixiv') $class = 'pixiv-btn';
                             elseif ($slug === 'commission calculator') $class = 'calculator-btn';
+                            
+                            if ($link->bg_color) {
+                                $style .= "background-color: {$link->bg_color} !important; background: {$link->bg_color} !important; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);";
+                            }
+                            if ($link->text_color) {
+                                $style .= "color: {$link->text_color} !important;";
+                            }
                         @endphp
                         
-                        <a href="{{ url($link->url) }}" @if($target) target="{{ $target }}" @endif class="social-pill-btn {{ $class }}">
+                        <a href="{{ url($link->url) }}" @if($target) target="{{ $target }}" @endif class="social-pill-btn {{ $class }}" @if($style) style="{{ $style }}" @endif>
                             @if($slug === 'vgen')
                                 <svg class="social-pill-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M5 5l7 14 7-14" />
@@ -400,6 +413,10 @@
                                     <line x1="8" y1="14" x2="16" y2="14"></line>
                                     <line x1="12" y1="6" x2="16" y2="6"></line>
                                     <line x1="8" y1="6" x2="8" y2="6.01"></line>
+                                </svg>
+                            @elseif($slug === 'pixiv')
+                                <svg class="social-pill-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                    <path d="M14 4H6v16h3v-6h5c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 9H9V7h5c1.65 0 3 1.35 3 3s-1.35 3-3 3z"/>
                                 </svg>
                             @else
                                 <svg class="social-pill-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1288,7 +1305,7 @@
 
                 // --- Float-in Scroll Animation Logic for About Section ---
                 const aboutSection = document.getElementById('about');
-                const aboutCard = document.querySelector('.about-card');
+                const aboutCard = document.querySelector('.about-card-wrapper');
                 const aboutContentRight = document.querySelector('.about-content-right');
 
                 if (aboutSection && aboutCard && aboutContentRight) {
@@ -2116,6 +2133,54 @@
                 }
             });
         });
+        </script>
+
+        <!-- Custom 3D Tilt & Sheen Script -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const tiltCards = document.querySelectorAll('.about-card, .coming-soon-card');
+
+                tiltCards.forEach((card) => {
+                    // Create sheen element
+                    const sheen = document.createElement('div');
+                    sheen.classList.add('card-sheen');
+                    card.appendChild(sheen);
+
+                    card.addEventListener('mouseenter', () => {
+                        card.style.transition = 'none';
+                        sheen.style.transition = 'none';
+                        sheen.style.opacity = '1';
+                    });
+
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+
+                        const centerX = rect.width / 2;
+                        const centerY = rect.height / 2;
+
+                        // Calculate rotations (less violent)
+                        const rotateX = -(y - centerY) / 35;
+                        const rotateY = (x - centerX) / 35;
+
+                        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+
+                        // Update sheen position
+                        const percentX = (x / rect.width) * 100;
+                        const percentY = (y / rect.height) * 100;
+                        sheen.style.background = `radial-gradient(circle at ${percentX}% ${percentY}%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%)`;
+                    });
+
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+                        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+                        
+                        sheen.style.transition = 'opacity 0.5s ease';
+                        sheen.style.opacity = '0';
+                    });
+                });
+            });
         </script>
     </body>
 </html>

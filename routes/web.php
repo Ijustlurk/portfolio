@@ -24,7 +24,9 @@ Route::prefix('cms')->group(function () {
         Route::post('/commissions/settings', [CmsController::class, 'updateCommissionSettings'])->name('cms.commissions.settings.update');
         Route::post('/commissions/slots', [CmsController::class, 'updateCommissionSlots'])->name('cms.commissions.slots.update');
         Route::post('/commissions/{id}', [CmsController::class, 'updateCommission'])->name('cms.commissions.update');
+        Route::post('/socials', [CmsController::class, 'storeSocialLink'])->name('cms.socials.store');
         Route::post('/socials/reorder', [CmsController::class, 'reorderSocialLinks'])->name('cms.socials.reorder');
         Route::post('/socials/{id}', [CmsController::class, 'updateSocialLink'])->name('cms.socials.update');
+        Route::delete('/socials/{id}', [CmsController::class, 'destroySocialLink'])->name('cms.socials.destroy');
     });
 });

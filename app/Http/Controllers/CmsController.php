@@ -620,15 +620,57 @@ class CmsController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'url' => 'required|string|max:255',
+            'bg_color' => 'nullable|string|max:50',
+            'text_color' => 'nullable|string|max:50',
         ]);
 
         $link = SocialLink::findOrFail($id);
         $link->update([
             'name' => $request->input('name'),
             'url' => $request->input('url'),
+            'is_visible' => $request->has('is_visible'),
+            'bg_color' => $request->input('bg_color'),
+            'text_color' => $request->input('text_color'),
         ]);
 
         return redirect()->route('cms.dashboard')->with('success', 'Social link updated successfully!');
+    }
+
+    /**
+     * Store a new social link.
+     */
+    public function storeSocialLink(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'url' => 'required|string|max:255',
+            'bg_color' => 'nullable|string|max:50',
+            'text_color' => 'nullable|string|max:50',
+        ]);
+
+        $maxSort = SocialLink::max('sort_order') ?? -1;
+
+        SocialLink::create([
+            'name' => $request->input('name'),
+            'url' => $request->input('url'),
+            'is_visible' => $request->has('is_visible'),
+            'bg_color' => $request->input('bg_color'),
+            'text_color' => $request->input('text_color'),
+            'sort_order' => $maxSort + 1,
+        ]);
+
+        return redirect()->route('cms.dashboard')->with('success', 'Social link added successfully!');
+    }
+
+    /**
+     * Delete a social link.
+     */
+    public function destroySocialLink($id)
+    {
+        $link = SocialLink::findOrFail($id);
+        $link->delete();
+
+        return redirect()->route('cms.dashboard')->with('success', 'Social link deleted successfully!');
     }
 
     /**

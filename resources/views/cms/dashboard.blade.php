@@ -1837,9 +1837,14 @@
                         <h3 style="font-family: var(--font-mono); font-size: 1.25rem; font-weight: 800; text-transform: uppercase; margin: 0;">
                             Manage Social Links
                         </h3>
-                        <p style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono); margin: 0;" id="socials-drag-instructions">
-                            ↕️ Drag handle on left to reorder
-                        </p>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <p style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono); margin: 0;" id="socials-drag-instructions">
+                                ↕️ Drag handle on left to reorder
+                            </p>
+                            <button class="btn btn-primary" onclick="openAddSocialModal()" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 6px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Add Social Link
+                            </button>
+                        </div>
                     </div>
 
                     <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden;">
@@ -1849,7 +1854,8 @@
                                     <th style="width: 50px;">Order</th>
                                     <th>Platform Name</th>
                                     <th>Link URL</th>
-                                    <th style="width: 120px; text-align: center;">Actions</th>
+                                    <th style="width: 100px; text-align: center;">Visibility</th>
+                                    <th style="width: 180px; text-align: center;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1869,9 +1875,25 @@
                                             </a>
                                         </td>
                                         <td style="text-align: center;">
-                                            <button class="btn btn-secondary" onclick="openEditSocialModal({{ $link->id }}, '{{ addslashes($link->name) }}', '{{ addslashes($link->url) }}')" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px;">
-                                                Edit
-                                            </button>
+                                            @if($link->is_visible)
+                                                <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 0.75rem; font-weight: 700; font-family: var(--font-mono);">VISIBLE</span>
+                                            @else
+                                                <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background: rgba(239, 68, 68, 0.1); color: #ef4444; font-size: 0.75rem; font-weight: 700; font-family: var(--font-mono);">HIDDEN</span>
+                                            @endif
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <div style="display: flex; gap: 8px; justify-content: center;">
+                                                <button class="btn btn-secondary" onclick="openEditSocialModal({{ $link->id }}, '{{ addslashes($link->name) }}', '{{ addslashes($link->url) }}', {{ $link->is_visible ? 'true' : 'false' }}, '{{ $link->bg_color ?? '' }}', '{{ $link->text_color ?? '' }}')" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px;">
+                                                    Edit
+                                                </button>
+                                                <form action="{{ route('cms.socials.destroy', $link->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this social link?');" style="margin: 0;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty
@@ -2076,6 +2098,30 @@
                     <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; font-family: var(--font-mono);">
                         Tip: Absolute URLs (starting with http:// or https://) or relative paths (like /commission) are allowed.
                     </p>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <label for="social-is-visible" class="form-label" style="margin: 0;">Visible to Public</label>
+                        <label class="switch-container">
+                            <input type="checkbox" id="social-is-visible" name="is_visible" value="1">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="social-bg-color" class="form-label">Background Color (e.g. #FF5500)</label>
+                        <input type="text" id="social-bg-color" name="bg_color" class="form-input" placeholder="Leave empty for default">
+                    </div>
+                    <div class="form-group">
+                        <label for="social-text-color" class="form-label">Text Color (e.g. #FFFFFF)</label>
+                        <input type="text" id="social-text-color" name="text_color" class="form-input" placeholder="Leave empty for default">
+                    </div>
+                </div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 1.25rem; font-family: var(--font-mono);">
+                    Note: If you leave the colors empty, it will use the default color and icon based on the platform name (e.g. Instagram, Twitter) if recognized.
                 </div>
 
                 <div class="form-actions">
@@ -3770,9 +3816,26 @@
         const socialModal = document.getElementById('social-modal');
         const socialForm = document.getElementById('social-form');
         
-        function openEditSocialModal(id, name, url) {
+        function openAddSocialModal() {
+            document.getElementById('social-modal-title').textContent = 'Add Social Link';
+            document.getElementById('social-name').value = '';
+            document.getElementById('social-url').value = '';
+            document.getElementById('social-is-visible').checked = true;
+            document.getElementById('social-bg-color').value = '';
+            document.getElementById('social-text-color').value = '';
+            
+            socialForm.action = `/cms/socials`;
+            
+            socialModal.classList.add('active');
+        }
+
+        function openEditSocialModal(id, name, url, isVisible, bgColor, textColor) {
+            document.getElementById('social-modal-title').textContent = 'Edit Social Link';
             document.getElementById('social-name').value = name;
             document.getElementById('social-url').value = url;
+            document.getElementById('social-is-visible').checked = isVisible;
+            document.getElementById('social-bg-color').value = bgColor;
+            document.getElementById('social-text-color').value = textColor;
             
             // Set form action dynamically
             socialForm.action = `/cms/socials/${id}`;
