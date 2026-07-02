@@ -1723,6 +1723,20 @@
                     </div>
                 </div>
 
+                <!-- Commission Content Settings (TOS, Dos, Donts) -->
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h4 style="font-family: var(--font-mono); font-size: 0.95rem; font-weight: 800; margin-bottom: 0.5rem; text-transform: uppercase; color: var(--accent-color);">
+                            Commission Content & Rules
+                        </h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Manage your Terms of Service (TOS), Dos, and Don'ts shown on the commission page.</p>
+                    </div>
+                    <button class="btn btn-secondary" onclick="openCommissionContentModal()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        Edit Dos, Don'ts & TOS
+                    </button>
+                </div>
+
                 <!-- Global Multipliers Settings -->
                 <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
                     <h4 style="font-family: var(--font-mono); font-size: 0.95rem; font-weight: 800; margin-bottom: 1rem; text-transform: uppercase; color: var(--accent-color);">
@@ -2024,6 +2038,74 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- EDIT COMMISSION CONTENT MODAL -->
+    <div class="modal" id="commission-content-modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Dos, Don'ts & TOS</h3>
+                <button type="button" class="modal-close" onclick="closeCommissionContentModal()">×</button>
+            </div>
+            <form action="{{ route('cms.commissions.content.update') }}" method="POST">
+                @csrf
+                
+                <div class="form-group">
+                    <label class="form-label" style="display: flex; justify-content: space-between;">
+                        Terms of Service (TOS)
+                        <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: none; font-family: var(--font-sans);">Supports basic HTML or plain text</span>
+                    </label>
+                    <textarea name="tos" class="form-input" rows="8" style="resize: vertical; font-family: var(--font-mono); font-size: 0.85rem;" placeholder="Enter TOS here. Leave blank to use default hardcoded TOS.">{{ $commissionContent['tos'] ?? '' }}</textarea>
+                </div>
+
+                <div class="form-row" style="margin-top: 1.5rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" style="color: #10b981; display: flex; justify-content: space-between; align-items: center;">
+                            ✓ DOS
+                            <button type="button" onclick="addDoItem()" style="background: none; border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; border-radius: 4px; font-size: 0.7rem; padding: 2px 8px; cursor: pointer; font-family: var(--font-mono);">+ Add</button>
+                        </label>
+                        <div id="dos-list-container" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+                            @forelse($commissionContent['dos'] as $do)
+                                <div class="dynamic-list-item" style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                                    <input type="text" name="dos[]" class="form-input" value="{{ $do }}" style="font-size: 0.85rem;" placeholder="e.g. Anime characters, OCs, Fanart">
+                                    <button type="button" onclick="this.parentElement.remove()" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; border-radius: 6px; padding: 0.6rem 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
+                                </div>
+                            @empty
+                                <div class="dynamic-list-item" style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                                    <input type="text" name="dos[]" class="form-input" value="" style="font-size: 0.85rem;" placeholder="e.g. Anime characters, OCs, Fanart">
+                                    <button type="button" onclick="this.parentElement.remove()" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; border-radius: 6px; padding: 0.6rem 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" style="color: #f43f5e; display: flex; justify-content: space-between; align-items: center;">
+                            ✕ DON'TS
+                            <button type="button" onclick="addDontItem()" style="background: none; border: 1px solid rgba(244, 63, 94, 0.3); color: #f43f5e; border-radius: 4px; font-size: 0.7rem; padding: 2px 8px; cursor: pointer; font-family: var(--font-mono);">+ Add</button>
+                        </label>
+                        <div id="donts-list-container" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;">
+                            @forelse($commissionContent['donts'] as $dont)
+                                <div class="dynamic-list-item" style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                                    <input type="text" name="donts[]" class="form-input" value="{{ $dont }}" style="font-size: 0.85rem;" placeholder="e.g. Mecha, Gore, Furry">
+                                    <button type="button" onclick="this.parentElement.remove()" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; border-radius: 6px; padding: 0.6rem 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
+                                </div>
+                            @empty
+                                <div class="dynamic-list-item" style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                                    <input type="text" name="donts[]" class="form-input" value="" style="font-size: 0.85rem;" placeholder="e.g. Mecha, Gore, Furry">
+                                    <button type="button" onclick="this.parentElement.remove()" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; border-radius: 6px; padding: 0.6rem 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeCommissionContentModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Content</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -4076,6 +4158,39 @@
                     instructions.style.opacity = '1';
                 }
             });
+        }
+
+        // --- Commission Content Modal JS ---
+        function openCommissionContentModal() {
+            document.getElementById('commission-content-modal').classList.add('active');
+        }
+
+        function closeCommissionContentModal() {
+            document.getElementById('commission-content-modal').classList.remove('active');
+        }
+
+        function addDoItem() {
+            const container = document.getElementById('dos-list-container');
+            const div = document.createElement('div');
+            div.className = 'dynamic-list-item';
+            div.style.cssText = 'display: flex; gap: 0.5rem; align-items: flex-start;';
+            div.innerHTML = `
+                <input type="text" name="dos[]" class="form-input" value="" style="font-size: 0.85rem;" placeholder="e.g. Anime characters, OCs, Fanart">
+                <button type="button" onclick="this.parentElement.remove()" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; border-radius: 6px; padding: 0.6rem 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function addDontItem() {
+            const container = document.getElementById('donts-list-container');
+            const div = document.createElement('div');
+            div.className = 'dynamic-list-item';
+            div.style.cssText = 'display: flex; gap: 0.5rem; align-items: flex-start;';
+            div.innerHTML = `
+                <input type="text" name="donts[]" class="form-input" value="" style="font-size: 0.85rem;" placeholder="e.g. Mecha, Gore, Furry">
+                <button type="button" onclick="this.parentElement.remove()" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; border-radius: 6px; padding: 0.6rem 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
+            `;
+            container.appendChild(div);
         }
     </script>
 

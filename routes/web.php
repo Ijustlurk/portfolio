@@ -24,6 +24,7 @@ Route::prefix('cms')->group(function () {
         Route::post('/about/reset', [CmsController::class, 'resetAbout'])->name('cms.about.reset');
         Route::post('/settings', [CmsController::class, 'updateSettings'])->name('cms.settings.update');
         Route::post('/commissions/settings', [CmsController::class, 'updateCommissionSettings'])->name('cms.commissions.settings.update');
+        Route::post('/commissions/content', [CmsController::class, 'updateCommissionContent'])->name('cms.commissions.content.update');
         Route::post('/commissions/slots', [CmsController::class, 'updateCommissionSlots'])->name('cms.commissions.slots.update');
         Route::post('/commissions/{id}', [CmsController::class, 'updateCommission'])->name('cms.commissions.update');
         Route::post('/socials', [CmsController::class, 'storeSocialLink'])->name('cms.socials.store');

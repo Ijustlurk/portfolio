@@ -16,14 +16,19 @@
 
         <!-- CSS -->
         <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ time() }}">
-
+        
+        <style>
+            body:not(.dark-theme) #locked-btn {
+                display: none !important;
+            }
+        </style>
     </head>
     <body class="loading-active">
         <!-- Theme & Loader Initialization (Prevents Flash of Wrong Theme & Skips Loader) -->
         <script>
             (function() {
                 const theme = localStorage.getItem('theme');
-                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                if (theme === 'dark') {
                     document.body.classList.add('dark-theme');
                 }
 

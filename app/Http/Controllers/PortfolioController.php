@@ -107,7 +107,10 @@ class PortfolioController extends Controller
             'char_sheet_fully_rendered' => (int) \App\Models\Setting::get('commission_price_char_sheet_fully_rendered', '220'),
             'nsfw' => (int) \App\Models\Setting::get('commission_price_nsfw', '50'),
         ];
-        return view('commission', compact('tiers', 'multipliers'));
+        $tosContent = \App\Models\Setting::get('commission_tos', '');
+        $dosItems   = json_decode(\App\Models\Setting::get('commission_dos',   '[]'), true) ?? [];
+        $dontsItems = json_decode(\App\Models\Setting::get('commission_donts', '[]'), true) ?? [];
+        return view('commission', compact('tiers', 'multipliers', 'tosContent', 'dosItems', 'dontsItems'));
     }
 
     /**

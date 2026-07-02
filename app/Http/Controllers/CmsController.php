@@ -164,10 +164,16 @@ class CmsController extends Controller
             'price_nsfw' => Setting::get('commission_price_nsfw', '50'),
         ];
 
+        $commissionContent = [
+            'tos' => Setting::get('commission_tos', ''),
+            'dos' => json_decode(Setting::get('commission_dos', '[]'), true) ?? [],
+            'donts' => json_decode(Setting::get('commission_donts', '[]'), true) ?? [],
+        ];
+
         $socialLinks = SocialLink::orderBy('sort_order', 'asc')->get();
         $feedbacks = \App\Models\Feedback::orderBy('created_at', 'desc')->get();
 
-        return view('cms.dashboard', compact('illustrations', 'comics', 'concepts', 'about', 'analytics', 'settings', 'commissions', 'commissionSettings', 'socialLinks', 'feedbacks'));
+        return view('cms.dashboard', compact('illustrations', 'comics', 'concepts', 'about', 'analytics', 'settings', 'commissions', 'commissionSettings', 'commissionContent', 'socialLinks', 'feedbacks'));
     }
 
     /**
@@ -594,6 +600,30 @@ class CmsController extends Controller
         Setting::set('commission_price_nsfw', $request->price_nsfw);
 
         return redirect()->route('cms.dashboard')->with('success', 'Commission multipliers and base rates updated successfully!');
+    }
+
+    /**
+     * Update the commission TOS, Dos, and Don'ts content.
+     */
+    public function updateCommissionContent(Request $request)
+    {
+        $request->validate([
+            'tos' => 'nullable|string',
+            'dos' => 'nullable|array',
+            'dos.*' => 'nullable|string|max:500',
+            'donts' => 'nullable|array',
+            'donts.*' => 'nullable|string|max:500',
+        ]);
+
+        Setting::set('commission_tos', $request->input('tos', ''));
+
+        $dos = array_values(array_filter($request->input('dos', []), fn($v) => trim($v) !== ''));
+        Setting::set('commission_dos', json_encode($dos));
+
+        $donts = array_values(array_filter($request->input('donts', []), fn($v) => trim($v) !== ''));
+        Setting::set('commission_donts', json_encode($donts));
+
+        return redirect()->route('cms.dashboard')->with('success', 'Commission Dos, Don\'ts & TOS updated successfully!');
     }
 
     /**

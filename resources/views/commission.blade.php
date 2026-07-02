@@ -908,10 +908,14 @@
                     </div>
                 </div>
 
-                <!-- TOS button link -->
-                <div style="text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px; margin-top: 4px;">
+                <!-- TOS & Dos/Don'ts button links -->
+                <div style="text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px; margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
                     <button onclick="openTosModal()" style="background: none; border: none; color: var(--text-muted); text-decoration: underline; font-family: var(--font-mono); font-size: 0.72rem; cursor: pointer; transition: color 0.3s;" onmouseover="this.style.color='var(--accent-purple-solid)'" onmouseout="this.style.color='var(--text-muted)'">
                         Terms of Service (TOS)
+                    </button>
+                    <span style="color: rgba(255,255,255,0.15); font-size: 0.7rem;">|</span>
+                    <button onclick="openDosDontsModal()" style="background: none; border: none; color: var(--text-muted); text-decoration: underline; font-family: var(--font-mono); font-size: 0.72rem; cursor: pointer; transition: color 0.3s;" onmouseover="this.style.color='var(--accent-purple-solid)'" onmouseout="this.style.color='var(--text-muted)'">
+                        Dos &amp; Don'ts
                     </button>
                 </div>
             </div>
@@ -919,20 +923,118 @@
 
         <!-- TOS MODAL -->
         <div class="modal" id="tos-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 10000; align-items: center; justify-content: center;">
-            <div style="background: var(--card-bg); border: 1px solid var(--calc-border); border-radius: 20px; padding: 40px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; text-align: left; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+            <div style="background: var(--card-bg); border: 1px solid var(--calc-border); border-radius: 20px; padding: 40px; max-width: 620px; width: 90%; max-height: 85vh; overflow-y: auto; text-align: left; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
                     <h3 style="margin: 0; font-family: var(--font-mono); font-size: 1.2rem; font-weight: 800; color: var(--text-main); text-transform: uppercase;">Commission Terms of Service</h3>
                     <button onclick="closeTosModal()" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer;">×</button>
                 </div>
-                <div style="font-family: var(--font-sans); font-size: 0.9rem; color: var(--text-muted); line-height: 1.65; display: flex; flex-direction: column; gap: 15px;">
-                    <p><strong>1. General Terms</strong><br>By requesting a commission, you agree to the terms listed below. All artworks are for personal use unless commercial rights are purchased.</p>
-                    <p><strong>2. Payment & Process</strong><br>Full payment or a 50% deposit is required before commencing work. The artist will provide sketches for approval before finalizing lineart and colors.</p>
-                    <p><strong>3. Revisions</strong><br>Each tier includes a set number of major revisions. Additional edits after the rendering phase may incur extra fees.</p>
-                    <p><strong>4. Copyright & Commercial Use</strong><br>The artist retains copyright over the original creation. Commercial license enables use for promotions, merchandising, or streaming, but credit must be attributed to Yan.</p>
-                    <p style="color: var(--accent-purple-solid); font-weight: bold; font-family: var(--font-mono); font-size: 0.8rem; margin-top: 15px;">💡 Terms of Service placeholder. The artist will provide the updated detailed text later.</p>
+                <div id="tos-modal-body" style="font-family: var(--font-sans); font-size: 0.9rem; color: var(--text-muted); line-height: 1.65; display: flex; flex-direction: column; gap: 15px;">
+                    @if(!empty($tosContent))
+                        {!! nl2br(e($tosContent)) !!}
+                    @else
+                        <p style="text-align: center;"><strong>Freelance Commission &amp; Intellectual Property Agreement</strong><br>By commissioning the Artist (Yan/Yattsu) and submitting a request, the Client (you) agrees to be bound by the following terms and conditions.</p>
+
+                        <p><strong>GENERAL</strong><br>
+                        1. The Artist reserves the right to decline any commission request or project brief without providing a specific reason.<br>
+                        2. The Client must provide clear, detailed visual references, character specifications, and an explicit description of the intended usage scope upon submitting a request.<br>
+                        3. The Artist will not create artwork that promotes hate speech, targeted harassment, or plagiarism.</p>
+
+                        <p><strong>PAYMENTS</strong><br>
+                        1. All payments, deposits, and transaction milestones will be processed exclusively through VGen.<br>
+                        2. The Client agrees to pay the total amount calculated by the platform checkout, which includes VGen's standard client-side platform fee and third-party payment processing fees.<br>
+                        3. Work will not commence until the required initial payment or milestone deposit is successfully cleared through the platform.</p>
+
+                        <p><strong>REVISIONS</strong><br>
+                        1. Sketch Phase: The Client is entitled to up to two (2) major structural revisions (e.g., changes to pose, composition, or base elements) free of charge.<br>
+                        2. Rendering Phase: Once the sketch is approved and rendering begins, major structural adjustments will incur an additional fee calculated based on production hours. Only minor color or lighting tweaks can be requested at this stage.<br>
+                        3. Any changes that completely deviate from the original project brief provided during intake will be subject to extra charges.</p>
+
+                        <p><strong>DEADLINES AND DELIVERY</strong><br>
+                        1. General turnaround times range between two (2) to six (6) weeks, fluctuating depending on project complexity and the current queue workload.<br>
+                        2. The final deliverable will be provided as a high-resolution, unwatermarked digital file (typically PNG format) delivered securely.<br>
+                        3. Raw working project files (such as .PSD or .CLIP format) remain the property of the Artist and are not included unless a specific source-file buyout is negotiated.</p>
+
+                        <p><strong>USE</strong><br>
+                        1. Personal Use: For non-commercial tiers, the Client receives a personal, non-exclusive license to display the art socially, use it as an avatar, or print it for personal collection.<br>
+                        2. Commercial Use (e.g., Book Covers, Streaming Assets): For commercial tiers, the Client is granted a worldwide, perpetual license to utilize the artwork as a commercial asset for its designated purpose (such as marketing, printing book wraps, or digital distribution).<br>
+                        3. Independent merchandising buyouts (slapping the standalone artwork onto products for direct retail profit) require an explicit licensing upgrade.</p>
+
+                        <p><strong>INTELLECTUAL PROPERTY RIGHTS</strong><br>
+                        1. The Artist retains the underlying copyright and ownership of the artwork, including the right to display the piece in portfolios, social media showcases, and promotional materials.<br>
+                        2. The Client may not claim authorship or alter, trace, or modify the lineart of the final artwork without written consent.<br>
+                        3. Strict AI Prohibition: Under no circumstances may the artwork be submitted to, used for, or processed by artificial intelligence (AI) generators, data-scraping models, neural networks, or blockchain/NFT platforms.</p>
+
+                        <p><strong>REFUNDS</strong><br>
+                        1. If the Client cancels the project before work has officially begun, a full refund will be issued via VGen (minus non-refundable payment processing fees).<br>
+                        2. If the Client cancels mid-production after the sketch phase is approved, the initial 50% deposit will be retained as a "kill fee" to compensate for dedicated labor and time.<br>
+                        3. If the Artist must cancel the project due to an unforeseen emergency, a 100% full refund will be returned immediately to the Client through VGen, regardless of current progress.</p>
+
+                        <p><strong>COMMUNICATION</strong><br>
+                        1. All formal project communication, feedback updates, and file handovers must be conducted through VGen's messaging infrastructure or designated project dashboard to maintain an official paper trail.<br>
+                        2. The Artist is not liable for production delays or misunderstandings arising from vague reference instructions or extended periods of client unresponsiveness.<br>
+                        3. Please allow up to 24–48 hours for responses during standard working days.</p>
+                    @endif
                 </div>
                 <div style="display: flex; justify-content: flex-end; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
                     <button onclick="closeTosModal()" class="slot-btn" style="padding: 10px 20px; font-size: 0.8rem;">I Understand</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOS & DON'TS MODAL -->
+        <div class="modal" id="dos-donts-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 10000; align-items: center; justify-content: center;">
+            <div style="background: var(--card-bg); border: 1px solid var(--calc-border); border-radius: 20px; padding: 40px; max-width: 680px; width: 90%; max-height: 85vh; overflow-y: auto; text-align: left; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
+                    <h3 style="margin: 0; font-family: var(--font-mono); font-size: 1.2rem; font-weight: 800; color: var(--text-main); text-transform: uppercase;">Commission Dos &amp; Don'ts</h3>
+                    <button onclick="closeDosDontsModal()" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer;">×</button>
+                </div>
+
+                @php
+                    $hasDos   = !empty($dosItems);
+                    $hasDonts = !empty($dontsItems);
+                @endphp
+
+                @if(!$hasDos && !$hasDonts)
+                    <p style="font-family: var(--font-sans); font-size: 0.9rem; color: var(--text-muted); text-align: center; padding: 30px 0;">No Dos &amp; Don'ts have been configured yet.</p>
+                @else
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <!-- DOS -->
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+                                <span style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 4px 10px; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.1em;">✓ Do</span>
+                            </div>
+                            <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+                                @forelse($dosItems as $do)
+                                    <li style="display: flex; align-items: flex-start; gap: 10px; font-family: var(--font-sans); font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+                                        <span style="color: #10b981; font-size: 1rem; flex-shrink: 0; margin-top: 1px;">✅</span>
+                                        <span>{{ $do }}</span>
+                                    </li>
+                                @empty
+                                    <li style="font-family: var(--font-sans); font-size: 0.85rem; color: var(--text-muted); font-style: italic;">No items listed.</li>
+                                @endforelse
+                            </ul>
+                        </div>
+                        <!-- DON'TS -->
+                        <div style="border-left: 1px solid rgba(255,255,255,0.06); padding-left: 20px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+                                <span style="background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: 8px; padding: 4px 10px; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 800; color: #f43f5e; text-transform: uppercase; letter-spacing: 0.1em;">✕ Don't</span>
+                            </div>
+                            <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+                                @forelse($dontsItems as $dont)
+                                    <li style="display: flex; align-items: flex-start; gap: 10px; font-family: var(--font-sans); font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+                                        <span style="color: #f43f5e; font-size: 1rem; flex-shrink: 0; margin-top: 1px;">❌</span>
+                                        <span>{{ $dont }}</span>
+                                    </li>
+                                @empty
+                                    <li style="font-family: var(--font-sans); font-size: 0.85rem; color: var(--text-muted); font-style: italic;">No items listed.</li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    </div>
+                @endif
+
+                <div style="display: flex; justify-content: flex-end; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
+                    <button onclick="closeDosDontsModal()" class="slot-btn" style="padding: 10px 20px; font-size: 0.8rem;">Got It</button>
                 </div>
             </div>
         </div>
@@ -1102,6 +1204,14 @@
             // Sync with old calls just in case
             function closeTosModal() {
                 document.getElementById('tos-modal').style.display = 'none';
+            }
+
+            function openDosDontsModal() {
+                document.getElementById('dos-donts-modal').style.display = 'flex';
+            }
+
+            function closeDosDontsModal() {
+                document.getElementById('dos-donts-modal').style.display = 'none';
             }
 
             function toggleAdditionalCharInput() {
