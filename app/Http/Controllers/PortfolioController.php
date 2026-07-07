@@ -127,4 +127,30 @@ class PortfolioController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Feedback submitted successfully.']);
     }
+
+    /**
+     * Asynchronously track page views to bypass Edge Caching
+     */
+    public function trackView(Request $request)
+    {
+        $path = $request->input('path', '/');
+        
+        // Only track requests that are not CMS paths, health checks, or AJAX/JSON requests (except this one)
+        if (!str_starts_with(ltrim($path, '/'), 'cms') && ltrim($path, '/') !== 'up') {
+            try {
+                \App\Models\PageView::create([
+                    'ip_address' => md5($request->ip() . config('app.key')),
+                    'user_agent' => $request->userAgent(),
+                    'url' => $request->input('url', $request->fullUrl()),
+                    'path' => ($path === '/' || $path === '') ? 'Home' : ltrim($path, '/'),
+                    'referer' => $request->input('referer', $request->header('referer')),
+                ]);
+            } catch (\Exception $e) {
+                // Fail silently to prevent application crashes
+                logger()->error('Analytics Tracking Error: ' . $e->getMessage());
+            }
+        }
+        
+        return response()->json(['success' => true]);
+    }
 }

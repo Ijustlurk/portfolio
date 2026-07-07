@@ -1520,5 +1520,20 @@
             <span class="lightbox-close" onclick="closeCommissionLightbox()">&times;</span>
             <img class="lightbox-content" id="commission-lightbox-img" onclick="event.stopPropagation()">
         </div>
+        <!-- Asynchronous Page View Tracking (Bypasses Edge Cache) -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const urlParams = new URLSearchParams({
+                    path: window.location.pathname,
+                    url: window.location.href,
+                    referer: document.referrer || '',
+                    _t: Date.now()
+                });
+                fetch('/api/track-view?' + urlParams.toString(), {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                }).catch(e => console.error('Tracking error:', e));
+            });
+        </script>
     </body>
 </html>

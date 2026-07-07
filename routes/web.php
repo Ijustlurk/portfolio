@@ -6,8 +6,9 @@ use App\Http\Controllers\CmsController;
 Route::get('/', [PortfolioController::class, 'index'])->name('home');
 Route::get('/commission', [PortfolioController::class, 'commission'])->name('commission');
 Route::post('/feedback', [PortfolioController::class, 'storeFeedback'])->name('feedback.store');
+Route::get('/api/track-view', [PortfolioController::class, 'trackView'])->name('track.view');
 
-Route::prefix('cms')->group(function () {
+Route::prefix('cms')->middleware([\App\Http\Middleware\NoCache::class])->group(function () {
     Route::get('/login', [CmsController::class, 'showLogin'])->name('login');
     Route::post('/login', [CmsController::class, 'login'])->middleware('throttle:5,1');
     
