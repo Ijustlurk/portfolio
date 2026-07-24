@@ -17,7 +17,7 @@ class CommissionNsfwTest extends TestCase
         
         $response->assertStatus(200);
         // Verify the setting is passed down in the multipliers object in JS
-        $response->assertSee('"nsfw":50', false);
+        $response->assertSee('"nsfw":25', false);
         $response->assertSee('id="toggle-nsfw"', false);
     }
 
@@ -25,8 +25,8 @@ class CommissionNsfwTest extends TestCase
     {
         $admin = User::factory()->create();
 
-        // Initially NSFW flat rate is default 50
-        $this->assertEquals('50', Setting::get('commission_price_nsfw', '50'));
+        // Initially NSFW flat rate is default 25
+        $this->assertEquals('25', Setting::get('commission_price_nsfw', '25'));
 
         $response = $this->actingAs($admin)->post(route('cms.commissions.settings.update'), [
             'multiplier_detailed_bg' => '50',

@@ -1770,7 +1770,7 @@
                         </div>
                         <div class="form-group" style="margin: 0; flex: 1; min-width: 140px;">
                             <label class="form-label" style="font-size: 0.7rem;">NSFW Flat Price ($)</label>
-                            <input type="number" name="price_nsfw" value="{{ $commissionSettings['price_nsfw'] ?? 50 }}" class="form-input" required min="0">
+                            <input type="number" name="price_nsfw" value="{{ $commissionSettings['price_nsfw'] ?? 25 }}" class="form-input" required min="0">
                         </div>
                         <div class="form-group" style="margin: 0; flex: 1; min-width: 150px;">
                             <label class="form-label" style="font-size: 0.7rem;">Char Sheet Base (Sketch) ($)</label>

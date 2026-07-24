@@ -105,7 +105,7 @@ class PortfolioController extends Controller
             'char_sheet_sketch' => (int) \App\Models\Setting::get('commission_price_char_sheet_sketch', '80'),
             'char_sheet_flat_color' => (int) \App\Models\Setting::get('commission_price_char_sheet_flat_color', '140'),
             'char_sheet_fully_rendered' => (int) \App\Models\Setting::get('commission_price_char_sheet_fully_rendered', '220'),
-            'nsfw' => (int) \App\Models\Setting::get('commission_price_nsfw', '50'),
+            'nsfw' => (int) \App\Models\Setting::get('commission_price_nsfw', '25'),
         ];
         $tosContent = \App\Models\Setting::get('commission_tos', '');
         $dosItems   = json_decode(\App\Models\Setting::get('commission_dos',   '[]'), true) ?? [];

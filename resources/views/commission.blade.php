@@ -758,6 +758,7 @@
                         <div class="addon-item" id="addon-item-bg">
                             <div class="addon-info">
                                 <span class="addon-label">Detailed Background</span>
+                                <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 1px;">(10-80% of base price)</span>
                                 <span class="addon-price" id="addon-bg-price">...</span>
                             </div>
                             <label class="switch">
@@ -769,6 +770,7 @@
                         <div class="addon-item" id="addon-item-source">
                             <div class="addon-info">
                                 <span class="addon-label">Source File (.PSD)</span>
+                                <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 1px;">({{ $multipliers['source_file'] }}% of base price)</span>
                                 <span class="addon-price" id="addon-source-price">...</span>
                             </div>
                             <label class="switch">
@@ -780,21 +782,11 @@
                         <div class="addon-item" id="addon-item-urgent">
                             <div class="addon-info">
                                 <span class="addon-label">Urgent Delivery</span>
+                                <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 1px;">({{ $multipliers['urgent'] }}% of base price)</span>
                                 <span class="addon-price" id="addon-urgent-price">...</span>
                             </div>
                             <label class="switch">
                                 <input type="checkbox" id="toggle-urgent" onchange="handleToggleChange()">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <!-- Commercial License Toggle -->
-                        <div class="addon-item" id="addon-item-commercial">
-                            <div class="addon-info">
-                                <span class="addon-label">Commercial License</span>
-                                <span class="addon-price" id="addon-commercial-price">...</span>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" id="toggle-commercial" onchange="handleToggleChange()">
                                 <span class="slider"></span>
                             </label>
                         </div>
@@ -803,6 +795,7 @@
                         <div class="addon-item" id="addon-item-nsfw">
                             <div class="addon-info">
                                 <span class="addon-label">NSFW / Mature Content</span>
+                                <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 1px;">(Flat $25)</span>
                                 <span class="addon-price" id="addon-nsfw-price">...</span>
                             </div>
                             <label class="switch">
@@ -816,6 +809,7 @@
                             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                 <div class="addon-info">
                                     <span class="addon-label">Additional Characters</span>
+                                    <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 1px;">({{ $multipliers['additional_char'] }}% of base price per character)</span>
                                     <span class="addon-price" id="addon-additional-char-price">...</span>
                                 </div>
                                 <label class="switch">
@@ -843,6 +837,7 @@
                         <div class="addon-item" id="addon-item-with-graphic" style="display: none;">
                             <div class="addon-info">
                                 <span class="addon-label">With Graphic Design</span>
+                                <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 1px;">({{ $multipliers['with_graphic'] }}% of base price)</span>
                                 <span class="addon-price" id="addon-with-graphic-price">...</span>
                             </div>
                             <label class="switch">
@@ -857,12 +852,26 @@
                 <div class="summary-box" id="sec-summary">
                     <div class="summary-header" style="justify-content: center; text-align: center;">
                         <div class="summary-price-wrap" style="align-items: center; text-align: center; width: 100%;">
+                            <div style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">~Approximate</div>
                             <span class="summary-price" id="tier-display-price">$0</span>
                             <div style="display: flex; flex-direction: column; margin-top: 4px; gap: 2px; align-items: center;">
                                 <span class="summary-delivery" id="tier-display-delivery">Estimated Delivery: ...</span>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Commercial License Toggle -->
+                <div class="addon-item" id="addon-item-commercial">
+                    <div class="addon-info">
+                        <span class="addon-label">Commercial License</span>
+                        <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 1px;">(100% of total calculation)</span>
+                        <span class="addon-price" id="addon-commercial-price">...</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-commercial" onchange="handleToggleChange()">
+                        <span class="slider"></span>
+                    </label>
                 </div>
 
                 <!-- Tech Specs & TOS link -->
@@ -1089,6 +1098,7 @@
                 const addonBg = document.getElementById('addon-item-bg');
                 const addonAddChar = document.getElementById('addon-item-additional-char');
                 const addonWithGraphic = document.getElementById('addon-item-with-graphic');
+                const addonCommercial = document.getElementById('addon-item-commercial');
 
                 if (service === 'illustration') {
                     secPresets.style.display = 'block';
@@ -1102,6 +1112,7 @@
                     addonBg.style.display = 'flex';
                     addonAddChar.style.display = 'flex';
                     addonWithGraphic.style.display = 'none';
+                    addonCommercial.style.display = 'flex';
                 } else if (service === 'char_sheet') {
                     secPresets.style.display = 'none';
                     secQuality.style.display = 'block';
@@ -1114,6 +1125,7 @@
                     addonBg.style.display = 'none';
                     addonAddChar.style.display = 'none';
                     addonWithGraphic.style.display = 'flex';
+                    addonCommercial.style.display = 'flex';
                 } else if (service === 'comic') {
                     secPresets.style.display = 'none';
                     secQuality.style.display = 'none';
@@ -1122,6 +1134,8 @@
                     secSummary.style.display = 'none';
                     secSpecs.style.display = 'none';
                     secComicInquiry.style.display = 'flex';
+                    
+                    addonCommercial.style.display = 'none';
                 }
 
                 // Update active class on Service pills
@@ -1368,15 +1382,13 @@
                 const bgPct = multipliers.detailed_bg;
                 const sourcePct = multipliers.source_file;
                 const urgentPct = multipliers.urgent;
-                const commPct = multipliers.commercial;
                 const addCharPct = multipliers.additional_char;
                 const withGraphicPct = multipliers.with_graphic;
-                const nsfwPrice = multipliers.nsfw;
+                const nsfwPrice = multipliers.nsfw || 25;
 
                 const bgPrice = Math.round(basePrice * bgPct / 100);
                 const sourcePrice = Math.round(basePrice * sourcePct / 100);
                 const urgentPrice = Math.round(basePrice * urgentPct / 100);
-                const commPrice = Math.round(basePrice * commPct / 100);
                 const addCharPrice = Math.round(basePrice * addCharPct / 100);
                 const withGraphicPrice = Math.round(basePrice * withGraphicPct / 100);
 
@@ -1384,52 +1396,56 @@
                 const formattedBgPrice = multipliers.detailed_bg > 0 ? `+$${bgPrice}` : 'FREE';
                 const formattedSourcePrice = multipliers.source_file > 0 ? `+$${sourcePrice}` : 'FREE';
                 const formattedUrgentPrice = multipliers.urgent > 0 ? `+$${urgentPrice}` : 'FREE';
-                const formattedCommPrice = multipliers.commercial > 0 ? `+$${commPrice}` : 'FREE';
                 const formattedAddCharPrice = multipliers.additional_char > 0 ? `+$${addCharPrice}` : 'FREE';
                 const formattedWithGraphicPrice = multipliers.with_graphic > 0 ? `+$${withGraphicPrice}` : 'FREE';
-                const formattedNsfwPrice = multipliers.nsfw > 0 ? `+$${nsfwPrice}` : 'FREE';
+                const formattedNsfwPrice = nsfwPrice > 0 ? `+$${nsfwPrice}` : 'FREE';
 
                 document.getElementById('addon-bg-price').textContent = formattedBgPrice;
                 document.getElementById('addon-source-price').textContent = formattedSourcePrice;
                 document.getElementById('addon-urgent-price').textContent = formattedUrgentPrice;
-                document.getElementById('addon-commercial-price').textContent = formattedCommPrice;
                 document.getElementById('addon-additional-char-price').textContent = formattedAddCharPrice;
                 document.getElementById('addon-with-graphic-price').textContent = formattedWithGraphicPrice;
                 document.getElementById('addon-nsfw-price').textContent = formattedNsfwPrice;
 
                 // Start building calculations
-                let totalPrice = basePrice;
+                let subtotal = basePrice;
                 let activeAddonsList = [];
 
                 if (document.getElementById('toggle-bg').checked) {
-                    totalPrice += bgPrice;
+                    subtotal += bgPrice;
                     activeAddonsList.push('Detailed Background');
                 }
                 if (document.getElementById('toggle-source').checked) {
-                    totalPrice += sourcePrice;
+                    subtotal += sourcePrice;
                     activeAddonsList.push('Source File (.PSD)');
                 }
                 if (document.getElementById('toggle-urgent').checked) {
-                    totalPrice += urgentPrice;
+                    subtotal += urgentPrice;
                     activeAddonsList.push('Urgent Delivery');
                 }
-                if (document.getElementById('toggle-commercial').checked) {
-                    totalPrice += commPrice;
-                    activeAddonsList.push('Commercial License');
-                }
                 if (document.getElementById('toggle-nsfw').checked) {
-                    totalPrice += nsfwPrice;
+                    subtotal += nsfwPrice;
                     activeAddonsList.push('NSFW / Mature Content');
                 }
                 if (currentService === 'illustration' && document.getElementById('toggle-additional-char').checked) {
                     const countInput = document.getElementById('additional-char-count');
                     const charCount = parseInt(countInput.value || 1);
-                    totalPrice += (addCharPrice * charCount);
+                    subtotal += (addCharPrice * charCount);
                     activeAddonsList.push(`Additional Characters (x${charCount})`);
                 }
                 if (currentService === 'char_sheet' && document.getElementById('toggle-with-graphic').checked) {
-                    totalPrice += withGraphicPrice;
+                    subtotal += withGraphicPrice;
                     activeAddonsList.push('With Graphic Design');
+                }
+
+                // Commercial License is exactly 100% of the total calculation (subtotal of other options)
+                const commPrice = subtotal;
+                document.getElementById('addon-commercial-price').textContent = `+$${commPrice}`;
+
+                let totalPrice = subtotal;
+                if (document.getElementById('toggle-commercial').checked) {
+                    totalPrice += commPrice;
+                    activeAddonsList.push('Commercial License');
                 }
 
                 // Render Summary Panel

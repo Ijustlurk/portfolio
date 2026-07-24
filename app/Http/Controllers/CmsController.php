@@ -161,7 +161,7 @@ class CmsController extends Controller
             'price_char_sheet_sketch' => Setting::get('commission_price_char_sheet_sketch', '80'),
             'price_char_sheet_flat_color' => Setting::get('commission_price_char_sheet_flat_color', '140'),
             'price_char_sheet_fully_rendered' => Setting::get('commission_price_char_sheet_fully_rendered', '220'),
-            'price_nsfw' => Setting::get('commission_price_nsfw', '50'),
+            'price_nsfw' => Setting::get('commission_price_nsfw', '25'),
         ];
 
         $commissionContent = [
